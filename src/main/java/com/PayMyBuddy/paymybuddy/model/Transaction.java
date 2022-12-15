@@ -1,8 +1,6 @@
 package com.PayMyBuddy.paymybuddy.model;
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "transactions")
@@ -11,34 +9,35 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_transaction")
-    private int idUser;
+    private int idTransaction;
 
-    @Column(name="transaction ")
-    private int transaction;
+    @Column(name="transaction ", precision = 5, scale = 4)
+    private double transaction;
 
     @Column(name="transaction_date ")
     private Date transaction_date;
 
-    @Column(name="user_target")
-    private int user_target;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "userTransmitter", referencedColumnName="id_user", nullable = false)
+    private User userTransmitter;
 
-    @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private PayMyBuddy payMyBuddy;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "userReceiver", referencedColumnName="id_user", nullable = false)
+    private User userReceiver;
 
-    public int getIdUser() {
-        return idUser;
+    public int getIdTransaction() {
+        return idTransaction;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
+    public void setIdTransaction(int idTransaction) {
+        this.idTransaction = idTransaction;
     }
 
-    public int getTransaction() {
+    public double getTransaction() {
         return transaction;
     }
 
-    public void setTransaction(int transaction) {
+    public void setTransaction(double transaction) {
         this.transaction = transaction;
     }
 
@@ -50,19 +49,21 @@ public class Transaction {
         this.transaction_date = transaction_date;
     }
 
-    public int getUser_target() {
-        return user_target;
+    public User getUserReceiver() {
+        return userReceiver;
     }
 
-    public void setUser_target(int user_target) {
-        this.user_target = user_target;
+    public void setUserReceiver(User userReceiver) {
+        this.userReceiver = userReceiver;
     }
 
-    public PayMyBuddy getPayMyBuddy() {
-        return payMyBuddy;
+    public User getUserTransmitter() {
+        return userTransmitter;
     }
 
-    public void setPayMyBuddy(PayMyBuddy payMyBuddy) {
-        this.payMyBuddy = payMyBuddy;
+    public void setUserTransmitter(User userTransmitter) {
+        this.userTransmitter = userTransmitter;
     }
+
+
 }

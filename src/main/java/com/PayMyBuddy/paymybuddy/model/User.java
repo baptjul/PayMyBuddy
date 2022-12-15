@@ -21,7 +21,7 @@ public class User {
     private String password;
 
     @Column(name="balance")
-    private int balance;
+    private double balance;
 
     @Column(name="first_name")
     private String first_name;
@@ -35,22 +35,27 @@ public class User {
     @Column(name="creation_date")
     private Date creation_date;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_user")
-    List<Transaction> transaction = new ArrayList<>();
+    @OneToMany(orphanRemoval = true, mappedBy="userTransmitter")
+    List<Transaction> transmittedTransactions = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(orphanRemoval = true, mappedBy="userReceiver")
+    List<Transaction> receivedTransactions = new ArrayList<>();
+
+    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_friends",
             joinColumns = @JoinColumn(name = "first_userid", referencedColumnName = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "second_userid", referencedColumnName = "id_user"))
     List<User> friendlist = new ArrayList<>();
 
+    @OneToMany(orphanRemoval = true, mappedBy = "payMyBuddyAccount")
+    List<Transfer> transfer = new ArrayList<>();
+
     public int getIdUser() {
         return id_user;
     }
 
-    public void setIdUser(int idUser) {
-        this.id_user = idUser;
+    public void setIdUser(int id_user) {
+        this.id_user = id_user;
     }
 
     public String getEmail() {
@@ -69,11 +74,11 @@ public class User {
         this.password = password;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
@@ -99,5 +104,45 @@ public class User {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
+    }
+
+    public Date getCreation_date() {
+        return creation_date;
+    }
+
+    public void setCreation_date(Date creation_date) {
+        this.creation_date = creation_date;
+    }
+
+    public List<Transaction> getTransmittedTransactions() {
+        return transmittedTransactions;
+    }
+
+    public void setTransmittedTransactions(List<Transaction> transmittedTransactions) {
+        this.transmittedTransactions = transmittedTransactions;
+    }
+
+    public List<Transaction> getReceivedTransactions() {
+        return receivedTransactions;
+    }
+
+    public void setReceivedTransactions(List<Transaction> receivedTransactions) {
+        this.receivedTransactions = receivedTransactions;
+    }
+
+    public List<User> getFriendlist() {
+        return friendlist;
+    }
+
+    public void setFriendlist(List<User> friendlist) {
+        this.friendlist = friendlist;
+    }
+
+    public List<Transfer> getTransfer() {
+        return transfer;
+    }
+
+    public void setTransfer(List<Transfer> transfer) {
+        this.transfer = transfer;
     }
 }

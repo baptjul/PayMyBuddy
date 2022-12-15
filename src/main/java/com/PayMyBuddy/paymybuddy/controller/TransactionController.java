@@ -13,9 +13,9 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-    @GetMapping(value = "/transaction/{userId}")
-    public List<Transaction> getTransactions(@PathVariable int userId){
-        return transactionService.getTransactions(userId);
+    @GetMapping(value = "/userTransaction/{userId}")
+    public List<Transaction> getUserTransactions(@PathVariable int userId){
+        return transactionService.getUserTransactions(userId);
     }
 
     @PostMapping(value = "/addTransaction")
@@ -23,8 +23,4 @@ public class TransactionController {
         return transactionService.addTransaction(newTransaction);
     }
 
-    @DeleteMapping(value = "/deleteTransaction/{id}")
-    public void deleteTransactionById(@PathVariable int id){
-        transactionService.deleteTransactionById(id);
-    }
 }

@@ -23,6 +23,11 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @GetMapping(value = "/friends/{id}")
+    public List<User> getFriendList(@PathVariable int id){
+        return userService.getFriendList(id);
+    }
+
     @PostMapping(value = "/addUser")
     public User addUser(@RequestBody User newUser){
         return userService.addUser(newUser);
@@ -33,8 +38,13 @@ public class UserController {
         return userService.updateUser(userToUpdate, id);
     }
 
-    @DeleteMapping(value = "/deleteUser/{id}")
-    public void deleteUserById(@PathVariable int id){
-        userService.deleteUserById(id);
+    @PostMapping(value = "/updateBalance/{id}")
+    public User updateBalanceUser(@RequestBody double amount, @RequestBody String action, @PathVariable int id){
+        return userService.updateBalanceUser(id, amount, action);
+    }
+
+    @PostMapping(value = "/addFriend/{firstId}/{secondId}")
+    public User addFriend(@PathVariable int firstId, @PathVariable int secondId){
+        return userService.addFriend(firstId, secondId);
     }
 }
