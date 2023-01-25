@@ -11,10 +11,10 @@ public class Transaction {
     @Column(name="id_transaction")
     private int idTransaction;
 
-    @Column(name="transaction ", precision = 5, scale = 4)
+    @Column(name="transaction", precision = 5, scale = 4)
     private double transaction;
 
-    @Column(name="transaction_date ")
+    @Column(name="transaction_date")
     private Date transaction_date;
 
     @ManyToOne(optional = false)

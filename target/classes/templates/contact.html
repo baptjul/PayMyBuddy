@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <title>header</title>
+    <title>contacts</title>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
     <script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -14,29 +14,14 @@
             src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light" th:fragment="header">
-    <a class="navbar-brand border text-white rounded bg-success mx-1 px-4 py-2 " th:href="@{/home}">
-        PayMyBuddy
-    </a>
+<header th:insert="~{/header :: header}"></header>
+<div class="d-block p-2 bg-light text-secondary"><a class="ml-3 text-info" th:href="@{/home}">Home</a> / Contacts</div>
 
-    <div class="mx-5">
-        <a class="px-3 text-dark text-decoration-none" th:href="@{/home}">
-            Home
-        </a>
-        <a class="px-3 text-dark text-decoration-none" th:href="@{/transfer}">
-            Transfer
-        </a>
-        <a class="px-3 text-dark text-decoration-none" th:href="@{/profile}">
-            Profile
-        </a>
-        <a class="px-3 text-dark text-decoration-none" th:href="@{/contact}">
-            Contact
-        </a>
-        <a class="px-3 text-dark text-decoration-none" th:href="@{/login}">
-            Log off
-        </a>
-    </div>
-</nav>
+<div class="form-group pt-3 mx-2 col-sm-3">
 
+    <ul>
+        <li th:each="contact : ${contacts}" th:text="${contact.user_name}"></li>
+    </ul>
+</div>
 </body>
 </html>

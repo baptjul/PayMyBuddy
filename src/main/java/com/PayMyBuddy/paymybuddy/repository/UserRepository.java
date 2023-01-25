@@ -11,4 +11,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = DBqueries.CHECK_IF_FRIEND, nativeQuery = true)
     int findFriend(int fistUserId, int secondUserId) ;
 
+    @Query(value = DBqueries.FIND_BY_MAIL, nativeQuery = true)
+    User findByMail(String eMail);
+
 }

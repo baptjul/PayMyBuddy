@@ -29,11 +29,12 @@ public class TransactionService {
         List<Transaction> allTransactions = new ArrayList<>();
         allTransactions.addAll(user.getTransmittedTransactions());
         allTransactions.addAll(user.getReceivedTransactions());
-        System.out.println(allTransactions);
         return allTransactions;
     }
 
     public Transaction addTransaction(Transaction newTransaction) {
+        System.out.println("newTransaction = " + newTransaction.getUserTransmitter());
+        System.out.println("newTransaction = " + newTransaction.getUserReceiver());
         User sender = newTransaction.getUserTransmitter();
         User receiver = newTransaction.getUserReceiver();
 

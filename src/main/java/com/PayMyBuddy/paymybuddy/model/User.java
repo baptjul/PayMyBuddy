@@ -11,40 +11,38 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_user")
+    @Column(name = "id_user")
     private int id_user;
 
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name="balance")
+    @Column(name = "balance")
     private double balance;
 
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String first_name;
 
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String last_name;
 
-    @Column(name="user_name")
+    @Column(name = "user_name")
     private String user_name;
 
-    @Column(name="creation_date")
+    @Column(name = "creation_date")
     private Date creation_date;
 
-    @OneToMany(orphanRemoval = true, mappedBy="userTransmitter")
+    @OneToMany(orphanRemoval = true, mappedBy = "userTransmitter")
     List<Transaction> transmittedTransactions = new ArrayList<>();
 
-    @OneToMany(orphanRemoval = true, mappedBy="userReceiver")
+    @OneToMany(orphanRemoval = true, mappedBy = "userReceiver")
     List<Transaction> receivedTransactions = new ArrayList<>();
 
-    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_friends",
-            joinColumns = @JoinColumn(name = "first_userid", referencedColumnName = "id_user"),
-            inverseJoinColumns = @JoinColumn(name = "second_userid", referencedColumnName = "id_user"))
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "first_userid", referencedColumnName = "id_user"), inverseJoinColumns = @JoinColumn(name = "second_userid", referencedColumnName = "id_user"))
     List<User> friendlist = new ArrayList<>();
 
     @OneToMany(orphanRemoval = true, mappedBy = "payMyBuddyAccount")
