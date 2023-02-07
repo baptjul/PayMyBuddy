@@ -28,7 +28,6 @@ public class TransferService {
     }
 
     public Transfer addTransfer(Transfer newTransfer) {
-        System.out.println("newTransfer = " + newTransfer.getAmount());
         LocalDate localDate = LocalDate.now();
         Date sqlDate = java.sql.Date.valueOf(localDate);
         userService.updateBalanceUser(newTransfer.getPayMyBuddyAccount().getIdUser(), newTransfer.getAmount(), newTransfer.getType());

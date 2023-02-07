@@ -20,39 +20,56 @@
 <section class="container mt-5">
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-12">
-                <button class="mb-5 px-5 btn btn-primary float-right"
-                        type="button">
-                    Edit
+            <form class="col-md-12">
+                <button class="mb-5 px-5 btn btn-primary float-right" id="toggleEdit" type="button">Edit</button>
+                <h1 class="mb-3 toggleVisible" style="display: block;"><span th:text="${user.first_name}"></span> <span
+                        th:text="${user.last_name}"></span></h1>
+                <label class="toggle mt-2" for="first_name" style="display: none;">First name</label>
+                <input class="toggle form-control" id="first_name" name="first_name" style="display: none;"
+                       type="text" value="${user.first_name}">
+                <label class="toggle mt-2" for="last_name" style="display: none;">Last name</label>
+                <input class="toggle form-control" id="last_name" name="last_name" style="display: none;" type="text"
+                       value="${user.last_name}">
+                <p class="toggleVisible" id="username" style="display: block;">Username: <span
+                        th:text="${user.user_name}"></span></p>
+                <label class="toggle mt-2" for="usernameInput" style="display: none;">User name</label>
+                <input class="toggle form-control" id="usernameInput" name="user_name" style="display: none;"
+                       type="text" value="${user.user_name}">
+                <p class="toggleVisible" id="email" style="display: block;">Email: <span th:text="${user.email}"></span>
+                </p>
+                <label class="toggle mt-2" for="emailInput" style="display: none;">Email</label>
+                <input class="toggle form-control" id="emailInput" name="email" style="display: none;" type="text"
+                       value="${user.email}">
+                <button class="toggleVisible mx-auto mt-2 mb-2 text-center px-5 btn btn-primary"
+                        style="width: 100%, display: none;" type="button">
+                    validate
                 </button>
-                <h1 class="mb-3"><span th:text="${user.first_name}"></span> <span th:text="${user.last_name}"></span>
-                </h1>
-                <p id="username" >Username: <span th:text="${user.user_name}"></span></p>
-<!--                <input type="text" class="form-control" id="usernameInput" value="${user.user_name}">-->
-                <p id="email" >Email: <span th:text="${user.email}"></span></p>
-<!--                <input type="text" class="form-control" id="emailInput" value="${user.email}">-->
-            </div>
+            </form>
         </div>
 
         <div class="my-5 mt-0 bg-light">
             <h2 class="my-3 p-5 d-flex justify-content-center align-items-center" th:text="${user.balance}"></h2>
-            <button id="toggle" class="mx-auto mt--2 mb-2 text-center px-5 btn btn-primary"
-                    type="button" style="width: 100%" data-toggle="collapse" data-target="#fog">
+            <button class="mx-auto mt--2 mb-2 text-center px-5 btn btn-primary" data-target="#fog"
+                    data-toggle="collapse" id="toggle" style="width: 100%" type="button">
                 Transfer
             </button>
-            <div id="fog" class="p-3 collapse">
-                <form th:action="@{/profile}" th:object="${newPayMyBuddy}" method="POST">
+            <div class="p-3 collapse" id="fog">
+                <form method="POST" th:action="@{/profile}" th:object="${newPayMyBuddy}">
                     <div class="form-group">
                         <label for="ibanField">Iban</label>
-                        <input type="text" class="form-control" id="ibanField" placeholder="Account Iban" th:field="*{iban}">
+                        <input class="form-control" id="ibanField" placeholder="Account Iban" th:field="*{iban}"
+                               type="text">
                     </div>
                     <div class="form-group">
                         <label for="amountField">Montant</label>
-                        <input type="number" class="form-control" id="amountField" placeholder="Montant du transfert" th:field="*{amount}">
+                        <input class="form-control" id="amountField" placeholder="Montant du transfert" th:field="*{amount}"
+                               type="number">
                     </div>
                     <div class="button-container d-flex justify-content-center">
-                        <button type="submit" class="m-2 btn btn-primary" th:value="'Credit'" th:name="type">+ Credit</button>
-                        <button type="submit" class="m-2 btn btn-primary" th:value="'Debit'" th:name="type">- Debit</button>
+                        <button class="m-2 btn btn-primary" th:name="type" th:value="'Credit'" type="submit">+ Credit
+                        </button>
+                        <button class="m-2 btn btn-primary" th:name="type" th:value="'Debit'" type="submit">- Debit
+                        </button>
                     </div>
                 </form>
             </div>
@@ -62,7 +79,7 @@
             <div class="col-md-12">
                 <h2>Friends</h2>
                 <ul class="list-group" th:each="friend : ${friends}">
-                    <li class="list-group-item" th:text="${friend.user_name}"></li>
+                    <li class="list-group-item" th:text="${friend.user_name} + ' - ' + ${friend.email}"></li>
                 </ul>
             </div>
         </div>
@@ -93,3 +110,29 @@
 </section>
 </body>
 </html>
+
+<script>
+  const editButton = document.querySelector("#toggleEdit");
+  editButton.addEventListener("click", toggleElements);
+
+  function toggleElements() {
+    const toggleElements = document.querySelectorAll(".toggleVisible");
+    toggleElements.forEach(element => {
+      if (element.style.display === "block") {
+        element.style.display = "none";
+      } else {
+        element.style.display = "block";
+      }
+    });
+
+    const toggleInputs = document.querySelectorAll(".toggle");
+    toggleInputs.forEach(input => {
+      if (input.style.display === "none") {
+        input.style.display = "block";
+      } else {
+        input.style.display = "none";
+      }
+    });
+  }
+
+</script>

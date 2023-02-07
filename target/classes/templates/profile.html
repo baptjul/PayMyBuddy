@@ -20,18 +20,24 @@
 <section class="container mt-5">
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-12">
-                <button class="mb-5 px-5 btn btn-primary float-right"
-                        type="button">
-                    Edit
+            <form class="col-md-12">
+                <button class="mb-5 px-5 btn btn-primary float-right" id="toggleEdit" type="button">Edit</button>
+                <h1 class="mb-3 toggleVisible" style="display: block;"><span th:text="${user.first_name}"></span> <span th:text="${user.last_name}"></span></h1>
+                <label class="toggle mt-2" style="display: none;" for="first_name">First name</label>
+                <input type="text" class="toggle form-control" id="first_name" name="first_name" value="${user.first_name}" style="display: none;">
+                <label class="toggle mt-2" style="display: none;" for="last_name">Last name</label>
+                <input type="text" class="toggle form-control" id="last_name" name="last_name" value="${user.last_name}" style="display: none;">
+                <p id="username" class="toggleVisible" style="display: block;">Username: <span th:text="${user.user_name}"></span></p>
+                <label class="toggle mt-2" style="display: none;" for="usernameInput">User name</label>
+                <input type="text" class="toggle form-control" id="usernameInput" name="user_name" value="${user.user_name}" style="display: none;">
+                <p id="email" class="toggleVisible" style="display: block;">Email: <span th:text="${user.email}"></span></p>
+                <label class="toggle mt-2" style="display: none;" for="emailInput">Email</label>
+                <input type="text" class="toggle form-control" id="emailInput" name="email" value="${user.email}" style="display: none;">
+                <button class="toggleVisible mx-auto mt-2 mb-2 text-center px-5 btn btn-primary"
+                        type="button" style="width: 100%, display: none;" >
+                    validate
                 </button>
-                <h1 class="mb-3"><span th:text="${user.first_name}"></span> <span th:text="${user.last_name}"></span>
-                </h1>
-                <p id="username" >Username: <span th:text="${user.user_name}"></span></p>
-<!--                <input type="text" class="form-control" id="usernameInput" value="${user.user_name}">-->
-                <p id="email" >Email: <span th:text="${user.email}"></span></p>
-<!--                <input type="text" class="form-control" id="emailInput" value="${user.email}">-->
-            </div>
+            </form>
         </div>
 
         <div class="my-5 mt-0 bg-light">
@@ -62,7 +68,7 @@
             <div class="col-md-12">
                 <h2>Friends</h2>
                 <ul class="list-group" th:each="friend : ${friends}">
-                    <li class="list-group-item" th:text="${friend.user_name}"></li>
+                    <li class="list-group-item" th:text="${friend.user_name} + ' - ' + ${friend.email}"></li>
                 </ul>
             </div>
         </div>
@@ -93,3 +99,28 @@
 </section>
 </body>
 </html>
+
+<script>
+  const editButton = document.querySelector("#toggleEdit");
+  editButton.addEventListener("click", toggleElements);
+
+  function toggleElements() {
+    const toggleElements = document.querySelectorAll(".toggleVisible");
+    toggleElements.forEach(element => {
+      if (element.style.display === "block") {
+        element.style.display = "none";
+      } else {
+        element.style.display = "block";
+      }
+    });
+
+    const toggleInputs = document.querySelectorAll(".toggle");
+    toggleInputs.forEach(input => {
+      if (input.style.display === "none") {
+        input.style.display = "block";
+      } else {
+        input.style.display = "none";
+      }
+    });
+  }
+</script>

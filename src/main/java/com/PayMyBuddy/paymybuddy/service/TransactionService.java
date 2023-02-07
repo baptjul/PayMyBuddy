@@ -33,8 +33,6 @@ public class TransactionService {
     }
 
     public Transaction addTransaction(Transaction newTransaction) {
-        System.out.println("newTransaction = " + newTransaction.getUserTransmitter());
-        System.out.println("newTransaction = " + newTransaction.getUserReceiver());
         User sender = newTransaction.getUserTransmitter();
         User receiver = newTransaction.getUserReceiver();
 

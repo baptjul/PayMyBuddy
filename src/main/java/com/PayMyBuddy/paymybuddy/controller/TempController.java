@@ -37,11 +37,5 @@ public class TempController {
         return "index.html";
     }
 
-    @GetMapping("/contact")
-    public String contactPage(Model model) {
-        List<User> contacts = userService.getUsers();
-        System.out.println(contacts);
-        model.addAttribute("contacts", contacts);
-        return "contact.html";
-    }
+
 }

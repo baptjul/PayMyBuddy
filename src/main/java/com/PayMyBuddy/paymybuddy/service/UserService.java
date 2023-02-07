@@ -35,10 +35,11 @@ public class UserService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByMail(email);
+        System.out.println("user = " + user.getPassword());
         if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), bCryptPasswordEncoder.encode(user.getPassword()), getAuthority());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthority());
     }
 
     private List<SimpleGrantedAuthority> getAuthority() {
@@ -49,8 +50,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findByMail(email);
     }
 
+    public List<User> searchUserByMail(String email) {
+        return userRepository.searchByMail(email);
+    }
+
     public User addUser(User user) {
-        System.out.println("user = " + user.getPassword());
         List<User> userList = getUsers();
         LocalDate localDate = LocalDate.now();
         Date sqlDate = java.sql.Date.valueOf(localDate);
@@ -79,12 +83,16 @@ public class UserService implements UserDetailsService {
     public User addFriend(int firstUser, int secondUser) {
         User firstFriend = getUserById(firstUser);
         User secondFriend = getUserById(secondUser);
-        List<User> friendList = firstFriend.getFriendlist();
+        List<User> firstFriendList = firstFriend.getFriendlist();
+        List<User> secondFriendList = secondFriend.getFriendlist();
         if (checkExistingFriends(firstUser, secondUser) == 1) {
             return null;
         } else {
-            friendList.add(secondFriend);
-            firstFriend.setFriendlist(friendList);
+            firstFriendList.add(secondFriend);
+            secondFriendList.add(firstFriend);
+            firstFriend.setFriendlist(firstFriendList);
+            secondFriend.setFriendlist(secondFriendList);
+            userRepository.save(secondFriend);
             return userRepository.save(firstFriend);
         }
     }
@@ -110,9 +118,8 @@ public class UserService implements UserDetailsService {
     }
 
     public User updateBalanceUser(int id, double amount, String type) {
-        System.out.println("id = " + id + ", amount = " + amount + ", type = " + type);
         User userToUpdate = getUserById(id);
-        if (Objects.equals(type, "Debit")) {
+        if (Objects.equals(type, "Debit") && userToUpdate.getBalance() >= 0 && userToUpdate.getBalance() >= amount) {
             userToUpdate.setBalance(userToUpdate.getBalance() - amount);
             return userRepository.save(userToUpdate);
         } else if (Objects.equals(type, "Credit")) {

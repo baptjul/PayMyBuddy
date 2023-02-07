@@ -15,8 +15,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.Principal;
 import java.util.List;
 
@@ -73,14 +76,40 @@ public class UserController {
         return "signin.html";
     }
 
+    @GetMapping("/contact")
+    public String contactPage(Model model, Principal principal) {
+        User user = userService.getUserByMail(principal.getName());
+        List<User> contacts = userService.getUsers();
+        contacts.remove(user);
+        model.addAttribute("contacts", contacts);
+        return "contact.html";
+    }
+
+    @PostMapping("/contact")
+    public String searchUsers(@RequestBody String query, Model model, Principal principal) {
+        User user = userService.getUserByMail(principal.getName());
+        try {
+            query = URLDecoder.decode(query, "UTF-8");
+            int index = query.indexOf("=", query.indexOf("=") + 1);
+            query = query.substring(index + 1);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        List<User> contacts = userService.searchUserByMail(query);
+        contacts.remove(user);
+        model.addAttribute("contacts", contacts);
+        return "contact.html";
+    }
+
     @PostMapping(value = "/addUser")
     public User addUser(@RequestBody User newUser) {
         return userService.addUser(newUser);
     }
 
-    @PostMapping(value = "/updateUser/{id}")
-    public User updateUser(@RequestBody User userToUpdate, @PathVariable int id) {
-        return userService.updateUser(userToUpdate, id);
+    @PostMapping(value = "/updateUser")
+    public User updateUser(Principal principal) {
+        User userToUpdate = userService.getUserByMail(principal.getName());
+        return userService.updateUser(userToUpdate, userToUpdate.getIdUser());
     }
 
     @PostMapping(value = "/updateBalance/{id}")
@@ -88,17 +117,19 @@ public class UserController {
         return userService.updateBalanceUser(id, amount, action);
     }
 
-    @PostMapping(value = "/addFriend/{firstId}/{secondId}")
-    public User addFriend(@PathVariable int firstId, @PathVariable int secondId) {
-        return userService.addFriend(firstId, secondId);
+    @PostMapping(value = "/addFriend/{userId}")
+    public RedirectView addFriend(@PathVariable int userId, Principal principal) {
+        User user = userService.getUserByMail(principal.getName());
+        int firstUser = user.getIdUser();
+        userService.addFriend(firstUser, userId);
+        return new RedirectView("/contact");
     }
 
     @PostMapping("/signin")
     public String signinPage(@ModelAttribute User newUser) {
         User newUseradded = userService.addUser(newUser);
         if (newUseradded.getEmail() != null) {
-            //userService.loadUserByUsername(newUseradded.getEmail());
-            return "redirect:/home";
+            return "redirect:/login";
         } else {
             return "redirect:/signin";
         }
