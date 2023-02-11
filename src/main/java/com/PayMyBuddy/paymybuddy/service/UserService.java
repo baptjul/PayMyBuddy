@@ -1,4 +1,5 @@
 package com.PayMyBuddy.paymybuddy.service;
+import com.PayMyBuddy.paymybuddy.constants.Fare;
 import com.PayMyBuddy.paymybuddy.model.User;
 import com.PayMyBuddy.paymybuddy.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,6 @@ public class UserService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByMail(email);
-        System.out.println("user = " + user.getPassword());
         if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
@@ -72,7 +72,6 @@ public class UserService implements UserDetailsService {
         User userToUpdate = getUserById(id);
 
         userToUpdate.setEmail(user.getEmail());
-        userToUpdate.setPassword(user.getPassword());
         userToUpdate.setFirst_name(user.getFirst_name());
         userToUpdate.setLast_name(user.getLast_name());
         userToUpdate.setUser_name(user.getUser_name());
@@ -85,7 +84,7 @@ public class UserService implements UserDetailsService {
         User secondFriend = getUserById(secondUser);
         List<User> firstFriendList = firstFriend.getFriendlist();
         List<User> secondFriendList = secondFriend.getFriendlist();
-        if (checkExistingFriends(firstUser, secondUser) == 1) {
+        if (checkExistingFriends(firstUser, secondUser) != 0) {
             return null;
         } else {
             firstFriendList.add(secondFriend);
@@ -106,9 +105,13 @@ public class UserService implements UserDetailsService {
         return user.getFriendlist();
     }
 
+    public double applyFee(double transaction) {
+        return transaction + (transaction * Fare.TRANSACTION_FARE);
+    }
+
     public void updateBalanceTransaction(User sender, User receiver, double transaction) {
         double balanceTransmitter = sender.getBalance();
-        sender.setBalance(balanceTransmitter - transaction);
+        sender.setBalance(balanceTransmitter - applyFee(transaction));
 
         double balanceReceiver = receiver.getBalance();
         receiver.setBalance(balanceReceiver + transaction);

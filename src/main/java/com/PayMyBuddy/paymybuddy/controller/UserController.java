@@ -6,18 +6,12 @@ import com.PayMyBuddy.paymybuddy.service.TransactionService;
 import com.PayMyBuddy.paymybuddy.service.TransferService;
 import com.PayMyBuddy.paymybuddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.Principal;
@@ -80,6 +74,10 @@ public class UserController {
     public String contactPage(Model model, Principal principal) {
         User user = userService.getUserByMail(principal.getName());
         List<User> contacts = userService.getUsers();
+        List<User> friends = userService.getFriendList(user.getIdUser());
+        for (User friend : friends) {
+            contacts.remove(friend);
+        }
         contacts.remove(user);
         model.addAttribute("contacts", contacts);
         return "contact.html";
@@ -107,9 +105,10 @@ public class UserController {
     }
 
     @PostMapping(value = "/updateUser")
-    public User updateUser(Principal principal) {
+    public String updateUser(@ModelAttribute("user") User user, Principal principal) {
         User userToUpdate = userService.getUserByMail(principal.getName());
-        return userService.updateUser(userToUpdate, userToUpdate.getIdUser());
+        userService.updateUser(user, userToUpdate.getIdUser());
+        return "redirect:/profile";
     }
 
     @PostMapping(value = "/updateBalance/{id}")

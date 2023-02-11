@@ -20,10 +20,6 @@ public class TransactionService {
     @Autowired
     TransactionRepository transactionRepository;
 
-    public double applyFee(double transaction) {
-        return transaction + ((transaction * Fare.TRANSACTION_FARE) / 100);
-    }
-
     public List<Transaction> getUserTransactions(int userId) {
         User user = userService.getUserById(userId);
         List<Transaction> allTransactions = new ArrayList<>();
@@ -35,16 +31,12 @@ public class TransactionService {
     public Transaction addTransaction(Transaction newTransaction) {
         User sender = newTransaction.getUserTransmitter();
         User receiver = newTransaction.getUserReceiver();
-
-        if (sender.getBalance() > newTransaction.getTransaction() && userService.checkExistingFriends(sender.getIdUser(), receiver.getIdUser()) == 1) {
+        if (sender.getBalance() > newTransaction.getTransaction() && userService.checkExistingFriends(sender.getIdUser(), receiver.getIdUser()) != 0) {
             Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 
             newTransaction.setTransaction_date(date);
+
             userService.updateBalanceTransaction(sender, receiver, newTransaction.getTransaction());
-
-            newTransaction.setTransaction(applyFee(newTransaction.getTransaction()));
-
-            System.out.println(newTransaction);
             return transactionRepository.save(newTransaction);
         }
         return null;

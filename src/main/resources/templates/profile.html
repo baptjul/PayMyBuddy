@@ -20,28 +20,34 @@
 <section class="container mt-5">
     <div class="container mt-5">
         <div class="row">
-            <form class="col-md-12">
+            <form class="col-md-12" th:action="@{/updateUser}" method="POST" th:object="${user}">
                 <button class="mb-5 px-5 btn btn-primary float-right" id="toggleEdit" type="button">Edit</button>
                 <h1 class="mb-3 toggleVisible" style="display: block;"><span th:text="${user.first_name}"></span> <span
                         th:text="${user.last_name}"></span></h1>
-                <label class="toggle mt-2" for="first_name" style="display: none;">First name</label>
-                <input class="toggle form-control" id="first_name" name="first_name" style="display: none;"
-                       type="text" value="${user.first_name}">
-                <label class="toggle mt-2" for="last_name" style="display: none;">Last name</label>
-                <input class="toggle form-control" id="last_name" name="last_name" style="display: none;" type="text"
-                       value="${user.last_name}">
+
+                <p class="toggleVisible" id="first_name" style="display: block;">First Name: <span
+                        th:text="${user.first_name}"></span></p>
+                <input class="toggle form-control mb-2" id="first_nameInput" name="first_name" placeholder="first name"
+                       style="display: none;" type="text" th:field="*{first_name}">
+
+                <p class="toggleVisible" id="last_name" style="display: block;">Last Name: <span
+                        th:text="${user.last_name}"></span></p>
+                <input class="toggle form-control mb-2" id="last_nameInput" name="last_name" placeholder="last name"
+                       style="display: none;"
+                       type="text" th:field="*{last_name}">
+
                 <p class="toggleVisible" id="username" style="display: block;">Username: <span
                         th:text="${user.user_name}"></span></p>
-                <label class="toggle mt-2" for="usernameInput" style="display: none;">User name</label>
-                <input class="toggle form-control" id="usernameInput" name="user_name" style="display: none;"
-                       type="text" value="${user.user_name}">
+                <input class="toggle form-control mb-2" id="usernameInput" name="user_name" placeholder="user name"
+                       style="display: none;" type="text" th:field="*{user_name}">
+
                 <p class="toggleVisible" id="email" style="display: block;">Email: <span th:text="${user.email}"></span>
                 </p>
-                <label class="toggle mt-2" for="emailInput" style="display: none;">Email</label>
-                <input class="toggle form-control" id="emailInput" name="email" style="display: none;" type="text"
-                       value="${user.email}">
-                <button class="toggleVisible mx-auto mt-2 mb-2 text-center px-5 btn btn-primary"
-                        style="width: 100%, display: none;" type="button">
+                <input class="toggle form-control mb-2" id="emailInput" name="email" placeholder="email" style="display: none;"
+                       type="email" required th:field="*{email}">
+
+                <button class="toggle mx-auto mt-2 mb-2 text-center px-5 btn btn-primary"
+                        style="width: 100%; display: none;" type="submit">
                     validate
                 </button>
             </form>
@@ -62,7 +68,8 @@
                     </div>
                     <div class="form-group">
                         <label for="amountField">Montant</label>
-                        <input class="form-control" id="amountField" placeholder="Montant du transfert" th:field="*{amount}"
+                        <input class="form-control" id="amountField" placeholder="Montant du transfert"
+                               th:field="*{amount}"
                                type="number">
                     </div>
                     <div class="button-container d-flex justify-content-center">
@@ -134,5 +141,6 @@
       }
     });
   }
+
 
 </script>

@@ -66,7 +66,7 @@ public class UserServiceTest {
         updatedUser.setFirst_name("john");
         updatedUser.setLast_name("doe");
         updatedUser.setUser_name("johndoe1");
-        User updateUser = userService.updateUser(updatedUser, savedUser.getIdUser());
+        userService.updateUser(updatedUser, savedUser.getIdUser());
 
         assertEquals("doejohn@gmail.com", userService.updateUser(updatedUser, savedUser.getIdUser()).getEmail());
     }
@@ -130,8 +130,36 @@ public class UserServiceTest {
         newUser.setUser_name("johndoe1");
         User userAdded = userService.addUser(newUser);
 
-        assertEquals(500, userService.updateBalanceUser(userAdded.getIdUser(), 300, "credit").getBalance());
-        assertEquals(200, userService.updateBalanceUser(userAdded.getIdUser(), 300, "debit").getBalance());
+        assertEquals(500, userService.updateBalanceUser(userAdded.getIdUser(), 300, "Credit").getBalance());
+        assertEquals(200, userService.updateBalanceUser(userAdded.getIdUser(), 300, "Debit").getBalance());
+    }
+
+    @Test
+    public void getUserByMailTest() {
+        User newUser = new User();
+        newUser.setBalance(200);
+        newUser.setEmail("johndoe@gmail.com");
+        newUser.setPassword("12345678910");
+        newUser.setFirst_name("john");
+        newUser.setLast_name("doe");
+        newUser.setUser_name("johndoe1");
+        userService.addUser(newUser);
+
+        assertEquals("johndoe@gmail.com", userService.getUserByMail("johndoe@gmail.com").getEmail());
+    }
+
+    @Test
+    public void searchUserByMailTest() {
+        User newUser = new User();
+        newUser.setBalance(200);
+        newUser.setEmail("johndoe@gmail.com");
+        newUser.setPassword("12345678910");
+        newUser.setFirst_name("john");
+        newUser.setLast_name("doe");
+        newUser.setUser_name("johndoe1");
+        userService.addUser(newUser);
+
+        assertEquals("johndoe@gmail.com", userService.searchUserByMail("doe").get(0).getEmail());
     }
 
     @Test

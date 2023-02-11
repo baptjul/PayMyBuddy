@@ -60,6 +60,7 @@ public class TransactionServiceTest {
         newTransactions.setTransaction(100);
         newTransactions.setUserTransmitter(firstuserAdded);
         newTransactions.setUserReceiver(seconduserAdded);
+        System.out.println(newTransactions);
 
         assertEquals(newTransactions, transactionService.addTransaction(newTransactions));
     }
